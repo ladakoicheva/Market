@@ -3,40 +3,52 @@ import style from './ProductForm.module.css'
 import Button from "../Button/Button";
 import { useState } from "react";
 import Switches from "../Switch";
-import { CATEGORIES } from "../../features/product/types";
+import { CategoriesE } from "../../features/product/types";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addProductData } from "../../features/product/productSlice";
+import { editProductData } from "../../features/product/productSlice";
 
 import { useNavigate } from "react-router";
 
-type FormValues = {
+interface FormValues  {
   name: string,
-  category:  CATEGORIES | undefined,
+  category:  CategoriesE| undefined,
   price: number,
   inStock:boolean,
 };
 
-export default function ProductForm() {
-  const { categories } = useAppSelector((s) => s.productData);
+type props = {
+  closeForm?:()=>void
+}
+
+export default function ProductForm({closeForm}:props) {
+  const { categories ,editProduct} = useAppSelector((s) => s.productData);
   const [backError] = useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  console.log(categories)
+
  
-  const initialValues: FormValues = {
+  const initialValues: FormValues= editProduct.isEdit ?
+    {
+      name: editProduct.product.name,
+      category: editProduct.product.category,
+      price: editProduct.product.price,
+      inStock:editProduct.product.inStock
+     } : {
   name: "",
   category: undefined,
   price: 0,
-  inStock: false,
+      inStock: false,
   };
 
  
   const sendData = async (formValues:FormValues,{ resetForm }: { resetForm: () => void }) => {
-    const res = await dispatch(addProductData(formValues)).unwrap();
+    const res = await dispatch(editProduct.isEdit? editProductData({...editProduct.product, ...formValues}):addProductData(formValues)).unwrap();
     if (res.ok) {
       resetForm()
       navigate('/myProducts')
+      if(closeForm)closeForm();
     }
 
   }
@@ -82,9 +94,10 @@ export default function ProductForm() {
               placeholder="category"
             >
               <option value="choose" hidden>Сhoose Category</option>
-              <option value={CATEGORIES.ELECTRONICS}>Electronics</option>
-              <option value={CATEGORIES.CLOUTHING}>Clothing</option>
-              <option value={CATEGORIES.FOOD}>Food</option>
+              {
+                categories.map((c)=><option value={c.text} key={c.text}>{c.text}</option>)
+              }
+             
             </Field>
           </div>
           
@@ -148,7 +161,7 @@ export default function ProductForm() {
           <Button
             style={{background:'pink'}}
             onClick={handleSubmit}
-            text="Add Product"
+            text={!editProduct.isEdit?"Add":"Edit"}
             isAsync={true}
           />
         </Form>

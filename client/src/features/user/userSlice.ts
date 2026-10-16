@@ -10,7 +10,8 @@ import { updateProductNoUser } from "../product/productSlice";
 import { getUserProductData } from "../product/productSlice";
 import { getCategoriesData } from "../product/productSlice";
 
-const initialState:stateI = {
+const initialState: stateI = {
+
   user: null,
   mode: ModeType.SIGN_UP,
   isAuth: false,

@@ -45,12 +45,17 @@ const productAPI = async < Response, T = undefined > (url: string| null, type : 
     return data;
   }
 
-export const getUserProducts = async () => {
+  export const getUserProducts = async () => {
   const data = await productAPI<productI>('get', 'GET');
   return data;
   }
 
   export const getCategories = async () => {
   const data = await productAPI('categories', 'GET');
+  return data;
+  }
+
+export const editProduct = async (product:productI) => {
+  const data = await productAPI('edit', 'PATCH',product);
   return data;
   }

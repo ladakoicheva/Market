@@ -13,20 +13,25 @@ import Modal from './components/Modal/Modal';
 import HomePage from './pages/HomePage/HomePage';
 import Page404 from './pages/404Page/Page404';
 import MyProductsPage from './pages/MyProductsPage/MyProductsPage';
+import ProductForm from './components/ProductForm/ProductForm';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormOpen,setIsFormOpen] = useState(false)
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+   const openForm = () => setIsFormOpen(true);
+  const closeForm = () => setIsFormOpen(false);
 
   const dispatch = useAppDispatch();
   const { isAuth, mode, isLoadingApp } = useAppSelector((s) => s.user);
+  
 
   return (
     <BrowserRouter>
       {isLoadingApp && <Loader />}
         <Auth />
-   
+
       <Header>
         <Button
           onClick={!isAuth ? openModal : () => dispatch(logoutUser())}
@@ -34,6 +39,9 @@ function App() {
           isAsync={false}
         />
       </Header>
+      {isFormOpen && (
+        <ProductForm closeForm={closeForm } />
+      )}
 
       {isModalOpen && (
        
@@ -50,7 +58,7 @@ function App() {
           !isLoadingApp && isAuth ?
            
             <>
-            <Route path='/myProducts' element={<MyProductsPage/> } />
+              <Route path='/myProducts' element={<MyProductsPage openModal={ openForm} closeModal={closeForm} /> } />
             <Route path='/add' element={<AddProductPage />} />
             </>:null
              

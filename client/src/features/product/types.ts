@@ -1,19 +1,27 @@
-export enum CATEGORIES  {
+export enum CategoriesE  {
   ELECTRONICS = "ELECTRONICS",
   CLOUTHING = ' CLOUTHING',
   FOOD ="FOOD",
 
 }
 
+export type category = {text:CategoriesE}
+
+
+  
+
 export interface productI {
   name: string,
-  category:  CATEGORIES | undefined,
+  category:  CategoriesE | undefined,
   price: number,
   id: string,
   owner: string;
-  inStock:boolean
+  inStock: boolean;
+  oldCategory?:string
 }
 
 export interface stateI {
+  editProduct:{isEdit:boolean,product:productI}
   products: productI[];
+   categories:category[]
 }

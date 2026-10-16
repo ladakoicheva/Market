@@ -5,20 +5,27 @@ import Loader from '../../components/Loader/Loader';
 import { useMemo } from 'react';
 import ProductCard from '../../components/ProductCard/ProductCard';
 
-export default function MyProductsPage() {
-  const { products } = useAppSelector((s) => s.productData);
-  const {isLoadingApp} = useAppSelector((s)=>s.user)
-console.log(products)
+type props={
+  closeModal: () => void,
+  openModal:()=>void
+}
 
+export default function MyProductsPage({ openModal, closeModal }: props) {
+  
+  const { products } = useAppSelector((s) => s.productData);
+  
+  const {isLoadingApp} = useAppSelector((s)=>s.user)
   const cards = useMemo(() => {
-    return products.map((p)=><ProductCard product={p} key={p.id}/>)
+    return products.map((p) => <ProductCard product={p} key={p.id} openModal={openModal} closeModal={ closeModal} />)
   },[products])
   if (isLoadingApp ) return <Loader />
-
-  console.log(products);
+if(products.length <= 0) return  <h1>No products</h1>
+ console.log(products)
   return (
-    <div className={style.grid_template_columns}>
-      {products.length > 0 ?  cards  : <h1>No products</h1>}
+    <>  <div className={style.grid_template_columns}>
+      {cards  }
     </div>
+    </>
+  
   )
 }

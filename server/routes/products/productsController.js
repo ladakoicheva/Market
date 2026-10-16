@@ -25,7 +25,7 @@ export const addProduct = async (req, res) => {
   if (!result.ok) return res.status(500).json({ ok: false, e: result.e });
   console.log(id, email, productData.category);
   await addProductCategories(id, email,productData.category);
-  return res.status(200).json({ ok: true, data: { ...result.data, owner: email } });
+  return res.status(200).json({ ok: true, data: { ...result.data, owner: email ,id} });
 };
 
 export const getUserProducts = async (req, res) => {
